@@ -1,0 +1,28 @@
+#/usr/bin/bash
+
+if [ $# -ne 1 ]; then
+	echo "Error solo se admite un parametro"
+	exit
+
+fi
+
+directory(){
+	directorio=$1
+	echo "Creando directorio..."
+	sleep 1
+	mkdir $directorio
+	directorio_actual=`pwd`
+	directorio_creado="$directorio_actual"/"$directorio"/
+	cd $directorio_creado;
+
+	echo "Creando directorios de trabajo..."
+	sleep 3
+	mkdir recognition content exploit script information_target
+	echo "Directorios creados..."
+	cd $directorio_creado;exec bash
+
+
+}
+
+directory $1
+
