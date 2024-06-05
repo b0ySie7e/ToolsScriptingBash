@@ -1,28 +1,21 @@
-#/usr/bin/bash
+#!/usr/bin/bash
 
 if [ $# -ne 1 ]; then
-	echo "Error solo se admite un parametro"
-	exit
-
+    echo "[+] Error: Se admite solo un parámetro"
+    exit 1
 fi
 
-directory(){
-	directorio=$1
-	echo "Creando directorio..."
-	sleep 1
-	mkdir $directorio
-	directorio_actual=`pwd`
-	directorio_creado="$directorio_actual"/"$directorio"/
-	cd $directorio_creado;
+directory() {
+    directorio="$1"
+    echo "[+] Creando directorio..."
+    sleep 1
+    mkdir -p "$directorio" || { echo "[+] Error al crear el directorio"; exit 1; }
+    cd "$directorio" || { echo "[+] Error al cambiar al directorio"; exit 1; }
 
-	echo "Creando directorios de trabajo..."
-	sleep 3
-	mkdir recognition content exploit script information_target
-	echo "Directorios creados..."
-	cd $directorio_creado;exec bash
-
-
+    echo "[+] Creando subdirectorios de trabajo..."
+    sleep 3
+    mkdir recognition content exploit script information_target || { echo "[+] Error al crear subdirectorios"; exit 1; }
+    echo "[+] Directorios creados correctamente."
 }
 
-directory $1
-
+directory "$1"
