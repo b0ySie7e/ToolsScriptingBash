@@ -1,21 +1,37 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
+# Verificar que se ha proporcionado exactamente un argumento
 if [ $# -ne 1 ]; then
-    echo "[+] Error: Se admite solo un parámetro"
+    echo "[+] Error: Ocurrio un error inesperado ..."
     exit 1
 fi
 
-directory() {
-    directorio="$1"
+# Función para manejar errores
+handle_error() {
+    echo "[+] Error: $1"
+    exit 1
+}
+
+trap 'handle_error "Se produjo un error inesperado."' ERR
+
+create_directories() {
+    local main_dir="$1"
+
     echo "[+] Creando directorio..."
     sleep 1
-    mkdir -p "$directorio" || { echo "[+] Error al crear el directorio"; exit 1; }
-    cd "$directorio" || { echo "[+] Error al cambiar al directorio"; exit 1; }
+
+    mkdir -p "$main_dir" || handle_error "al crear el directorio $main_dir"
+    cd "$main_dir" || handle_error "al cambiar al directorio $main_dir"
 
     echo "[+] Creando subdirectorios de trabajo..."
     sleep 3
-    mkdir recognition content exploit script information_target || { echo "[+] Error al crear subdirectorios"; exit 1; }
+
+    local subdirs=("recognition" "content" "exploit" "script" "information_target")
+    for subdir in "${subdirs[@]}"; do
+        mkdir -p "$subdir" || handle_error "al crear el subdirectorio $subdir"
+    done
+
     echo "[+] Directorios creados correctamente."
 }
 
-directory "$1"
+create_directories "$1"
